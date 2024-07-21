@@ -54,7 +54,6 @@ public class CameraController : MonoBehaviour {
 
     private void DefineSettings()
     {
-        //PlayerController.enablePlayerController = true;
         QualitySettings.vSyncCount = VSYNCMode;
         Application.targetFrameRate = maxFPS;
 
