@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviour
         {
             _currentSpeed = Mathf.Lerp(_currentSpeed, Speed, 10f * Time.deltaTime);
         }
-        Debug.Log(_currentSpeed);
 
         Vector3 moveDirectionForward = transform.forward * verticalInput;
         Vector3 moveDirectionSide = transform.right * horizontalInput;

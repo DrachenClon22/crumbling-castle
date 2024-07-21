@@ -84,7 +84,9 @@ public class Cube : MonoBehaviour, IInteractable
 
         if (_lookAtPlayer)
         {
-            transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform);
+            var targetRotation = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
+            targetRotation.Normalize();
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetRotation), BobSpeed * 3f * Time.deltaTime);
         } else
         {
             transform.Rotate(_rotation);
