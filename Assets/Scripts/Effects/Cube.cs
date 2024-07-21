@@ -14,6 +14,7 @@ public class Cube : MonoBehaviour, IInteractable
     private Vector3 _startPosition = Vector3.zero;
     private Vector3 _tempPosition = Vector3.zero;
     private Vector3 _rotation = Vector3.one;
+    private Vector3 _randomVector = Vector3.zero;
     private Transform _parentObject;
 
     private float _corruptTimerBased = 0f;
@@ -38,6 +39,11 @@ public class Cube : MonoBehaviour, IInteractable
 
     private void Start()
     {
+        _randomVector = new Vector3(
+            Random.Range(-1f, 1f),
+            Random.Range(-1f, 1f),
+            Random.Range(-1f, 1f)
+            );
         var go = new GameObject();
         go.transform.position = transform.position;
         go.transform.rotation = Quaternion.identity;
@@ -67,20 +73,21 @@ public class Cube : MonoBehaviour, IInteractable
                 _startPosition.z + Random.Range(-CurrentCorrupt, CurrentCorrupt)
                 );
             _rotation = new Vector3(
-                1 + Random.Range(-CurrentCorrupt, CurrentCorrupt),
-                1 + Random.Range(-CurrentCorrupt, CurrentCorrupt),
-                1 + Random.Range(-CurrentCorrupt, CurrentCorrupt)
+                _randomVector.x + Random.Range(-CurrentCorrupt, CurrentCorrupt),
+                _randomVector.x + Random.Range(-CurrentCorrupt, CurrentCorrupt),
+                _randomVector.x + Random.Range(-CurrentCorrupt, CurrentCorrupt)
                 );
         }
 
         _parentObject.position = new Vector3(
             _tempPosition.x,
-            _tempPosition.y + Mathf.Sin(Time.time * BobSpeed % 360) * BobHeight,
+            _tempPosition.y + Mathf.Sin(Time.time * BobSpeed % 360 * _randomVector.z) * BobHeight,
             _tempPosition.z);
         _parentObject.localScale = new Vector3(
-            _scale.x,
-            _scale.y + Mathf.Sin(Time.time * BobSpeed % 360) * BobHeight,
-            _scale.z);
+            _scale.x + Mathf.Sin(Time.time * BobSpeed % 360 * _randomVector.x) * BobHeight * _randomVector.z,
+            _scale.y + Mathf.Sin(Time.time * BobSpeed % 360 * _randomVector.y) * BobHeight * _randomVector.x,
+            _scale.z + Mathf.Sin(Time.time * BobSpeed % 360 * _randomVector.z) * BobHeight * _randomVector.y
+            );
 
         if (_lookAtPlayer)
         {
