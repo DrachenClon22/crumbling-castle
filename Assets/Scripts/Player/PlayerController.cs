@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,21 @@ public class PlayerController : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            InteractableController.Interactable?.GetComponent<IInteractable>().BeginInteract();
+        }
+        if (Input.GetMouseButton(0))
+        {
+            InteractableController.Interactable?.GetComponent<IInteractable>().ContinueInteract();
+            Trail.Instance.DrawLine();
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            InteractableController.Interactable?.GetComponent<IInteractable>().EndInteract();
+            Trail.Instance.ClearLine();
+        }
 
         // TODO reassign keys
         if (Input.GetKey(KeyCode.LeftShift))

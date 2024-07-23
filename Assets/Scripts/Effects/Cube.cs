@@ -19,22 +19,27 @@ public class Cube : MonoBehaviour, IInteractable
 
     private float _corruptTimerBased = 0f;
     private float _corruptTimer = 0f;
-
-    private bool _lookAtPlayer = false;
+    private float _cooldown = 10f;
+    private float _cooldownTimer = 0f;
 
     public void BeginInteract()
     {
-        _lookAtPlayer = true;
+
     }
 
     public void ContinueInteract()
     {
-        
+        CurrentCorrupt -= 0.1f*Time.deltaTime;
+        _cooldownTimer = 0f;
+
+        var targetRotation = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
+        targetRotation.Normalize();
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetRotation), BobSpeed * 3f * Time.deltaTime);
     }
 
     public void EndInteract()
     {
-        _lookAtPlayer = false;
+
     }
 
     private void Start()
@@ -57,12 +62,18 @@ public class Cube : MonoBehaviour, IInteractable
     }
     private void Update()
     {
+        if (_cooldownTimer > _cooldown)
+        {
+            CurrentCorrupt += 0.02f * Time.deltaTime;
+        }
+        CurrentCorrupt = Mathf.Clamp01(CurrentCorrupt);
         if (CurrentCorruptRate == 0)
         {
             CurrentCorruptRate = 0.1f;
         }
         _corruptTimerBased = CurrentCorrupt / CurrentCorruptRate;
         _corruptTimer += Time.deltaTime;
+        _cooldownTimer += Time.deltaTime;
 
         if (_corruptTimer > _corruptTimerBased)
         {
@@ -89,14 +100,6 @@ public class Cube : MonoBehaviour, IInteractable
             _scale.z + Mathf.Sin(Time.time * BobSpeed % 360 * _randomVector.z) * BobHeight * _randomVector.y
             );
 
-        if (_lookAtPlayer)
-        {
-            var targetRotation = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
-            targetRotation.Normalize();
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetRotation), BobSpeed * 3f * Time.deltaTime);
-        } else
-        {
-            transform.Rotate(_rotation);
-        }
+        transform.Rotate(_rotation);
     }
 }
