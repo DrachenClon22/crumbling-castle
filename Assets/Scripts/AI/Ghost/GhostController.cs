@@ -14,6 +14,9 @@ public class GhostController : MonoBehaviour, IInteractable
     public float HealthDamage = 0.3f;
     public float Speed = 2f;
 
+    public GameObject Cubes;
+    public AudioClip stunned;
+
     public bool StunnedState = false;
 
     [HideInInspector]
@@ -54,6 +57,7 @@ public class GhostController : MonoBehaviour, IInteractable
             if (PlayerController.GhostsHeld < 4)
             {
                 PlayerController.GhostsHeld += 1;
+                PlayerController.Score += 100;
                 GameObject.Destroy(gameObject);
             }
         }
@@ -68,9 +72,30 @@ public class GhostController : MonoBehaviour, IInteractable
             if (Health <= 0f && !StunnedState)
             {
                 ChangeState(Stunned);
+                SoundManager.PlayAudio(stunned);
             }
         }
     }
 
     public void EndInteract() { }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!StunnedState)
+        {
+            if (collision.gameObject.tag == "Player")
+            {
+                if (PlayerController.Score <= 100)
+                {
+                    PlayerController.Score = 0;
+                }
+                else
+                {
+                    PlayerController.Score -= 100;
+                }
+                CastleManager.Integrity -= 0.1f;
+                Destroy(gameObject);
+            }
+        }
+    }
 }

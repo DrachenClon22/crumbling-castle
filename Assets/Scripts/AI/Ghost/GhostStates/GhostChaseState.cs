@@ -10,6 +10,8 @@ public class GhostChaseState : GhostState
     {
         Controller = controller;
         _player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        Controller.Cubes.SetActive(false);
     }
 
     public override void Tick()

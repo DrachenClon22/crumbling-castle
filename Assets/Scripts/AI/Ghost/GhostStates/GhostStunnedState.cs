@@ -10,6 +10,8 @@ public class GhostStunnedState : GhostState
 
         Controller.StunnedState = true;
         Controller.StartCoroutine(Stunned());
+
+        Controller.Cubes.SetActive(true);
     }
 
     public override void Tick() { }

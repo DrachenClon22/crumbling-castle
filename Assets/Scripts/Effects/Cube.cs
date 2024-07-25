@@ -31,6 +31,10 @@ public class Cube : MonoBehaviour, IInteractable
     {
         CurrentCorrupt -= 0.1f*Time.deltaTime;
         _cooldownTimer = 0f;
+        if (CurrentCorrupt > 0.2f)
+        {
+            PlayerController.Score += 1;
+        }
 
         var targetRotation = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
         targetRotation.Normalize();
@@ -62,6 +66,10 @@ public class Cube : MonoBehaviour, IInteractable
     }
     private void Update()
     {
+        if (CurrentCorrupt > 0.4f)
+        {
+            CastleManager.Integrity -= 0.008f * Time.deltaTime;
+        }
         if (_cooldownTimer > _cooldown)
         {
             CurrentCorrupt += 0.02f * Time.deltaTime;
