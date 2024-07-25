@@ -9,6 +9,16 @@ public class PlayerController : MonoBehaviour
     public float Speed = 10f;
     public float SprintSpeed = 14f;
 
+    public TMPro.TMP_Text TMP_Ghosts;
+    public TMPro.TMP_Text TMP_Score;
+
+    private string _ghostsStart;
+    private string _scoreStart;
+
+    public static int GhostsHeld = 0;
+    public static int Score = 0;
+    public static float WandCharge = 1f;
+
     private float _currentSpeed = 0f;
 
     private CharacterController _characterController;
@@ -18,22 +28,32 @@ public class PlayerController : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
 
         _currentSpeed = Speed;
+
+        _ghostsStart = TMP_Ghosts.text;
+        _scoreStart = TMP_Score.text;
     }
     private void Update()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        if (Input.GetMouseButtonDown(0))
+        TMP_Ghosts.text = _ghostsStart.Replace("%GHS",GhostsHeld.ToString());
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
             InteractableController.Interactable?.GetComponent<IInteractable>().BeginInteract();
         }
-        if (Input.GetMouseButton(0))
+
+        if (WandCharge > 0f)
         {
-            InteractableController.Interactable?.GetComponent<IInteractable>().ContinueInteract();
-            Trail.Instance.DrawLine();
+            if (Input.GetMouseButton(0))
+            {
+                InteractableController.Interactable?.GetComponent<IInteractable>().ContinueInteract();
+                Trail.Instance.DrawLine();
+                WandCharge -= 0.1f * Time.deltaTime;
+            }
         }
-        if (Input.GetMouseButtonUp(0))
+        else if (WandCharge < 0f || Input.GetMouseButtonUp(0))
         {
             InteractableController.Interactable?.GetComponent<IInteractable>().EndInteract();
             Trail.Instance.ClearLine();

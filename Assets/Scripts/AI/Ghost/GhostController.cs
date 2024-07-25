@@ -47,7 +47,17 @@ public class GhostController : MonoBehaviour, IInteractable
         _currentState.EnterState(this);
     }
 
-    public void BeginInteract() { }
+    public void BeginInteract()
+    {
+        if (StunnedState)
+        {
+            if (PlayerController.GhostsHeld < 4)
+            {
+                PlayerController.GhostsHeld += 1;
+                GameObject.Destroy(gameObject);
+            }
+        }
+    }
 
     public void ContinueInteract()
     {
